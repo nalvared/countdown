@@ -118,5 +118,5 @@ body{
     transform: translateX(-100%);
 }
 .cursorhide{
-    cursor: none;
+    cursor: auto;
 }
