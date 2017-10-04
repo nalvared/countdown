@@ -1,0 +1,128 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="flipclock.css">
+		<link rel="stylesheet" href="custom.css">
+		<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+		<script src="jquery.min.js"></script>
+
+		<script src="flipclock.min.js"></script>
+	</head>
+	<body>
+		<div id="toolbar" class="toolbar">
+			<h1>Configuration</h1>
+			<div class="timeblock allowed">
+				<h3>Allowed time</h3>
+				<div class="hours">
+					<p>Hours</p>
+					<input id="allowHours" type="number" placeholder="Hours" value="0" min="0" max="59">
+				</div>
+				<div class="minutes">
+					<p>Minutes</p>
+					<input id="allowMinutes" type="number" placeholder="Minutes" value="0" min="0" max="59">
+				</div>
+				<div class="seconds">
+					<p>Seconds</p>
+					<input id="allowSeconds" type="number" placeholder="Seconds" value="0" min="0" max="59">
+				</div>
+				<div class="set">
+					<span></span>
+					<button id="setAllowed">Update</button>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<div class="timeblock questions">
+				<h3>Questions time</h3>
+				<div class="hours">
+					<p>Hours</p>
+					<input id="questionsHours" type="number" placeholder="Hours" value="0" min="0" max="59">
+				</div>
+				<div class="minutes">
+					<p>Minutes</p>
+					<input id="questionsMinutes" type="number" placeholder="Minutes" value="0" min="0" max="59">
+				</div>
+				<div class="seconds">
+					<p>Seconds</p>
+					<input id="questionsSeconds" type="number" placeholder="Seconds" value="0" min="0" max="59">
+				</div>
+				<div class="set">
+					<span></span>
+					<button id="setQuestions">Update</button>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<div class="timeblock buttons">
+				<h3>Launch buttons</h3>
+				<div class="set">
+					<button id="start">Start</button>
+				</div>
+				<div class="clear"></div>
+			</div>
+		</div>
+		<div class="container-clock">
+			<div class="clock centering"></div>
+		</div>
+	<script type="text/javascript">
+		var clockConfig = {
+			"allow": 0,
+			"questions": 0
+		};
+		var clock;
+		var timeout = {};
+		var isComplete = false;
+		
+		$(document).ready(function() {
+			const sheet = document.createElement('style')
+			sheet.setAttribute("id","animation");
+			document.head.appendChild(sheet);
+
+			clock = setCounter(clockConfig.allow);
+
+			$("#setAllowed").click(function(event) {
+				var hours = parseInt($("#allowHours").val())*3600;
+				var minutes = parseInt($("#allowMinutes").val())*60;
+				var seconds = parseInt($("#allowSeconds").val());
+				clockConfig.allow = hours+minutes+seconds;
+				sheet.innerHTML += ".anim-allow { animation: allow " + clockConfig.allow + "s; }";
+				clock = setCounter(clockConfig.allow);
+			});
+
+			$("#setQuestions").click(function(event) {
+				var hours = parseInt($("#questionsHours").val())*3600;
+				var minutes = parseInt($("#questionsMinutes").val())*60;
+				var seconds = parseInt($("#questionsSeconds").val());
+				clockConfig.questions = hours+minutes+seconds;
+				sheet.innerHTML += ".anim-questions { animation: question " + clockConfig.questions + "s; }";
+			});
+
+            $("#start").click(function(event) {
+				document.querySelector("body").classList.add("anim-allow");
+				document.querySelector("body").classList.add("cursorhide");
+				document.querySelector("#toolbar").classList.add("hidden");
+				
+				clock.start();
+				timeout.allow = setTimeout( function() {
+					document.querySelector("body").classList.remove("anim-allow");
+					document.querySelector("body").classList.add("anim-questions");
+					clock = setCounter(clockConfig.questions);
+					clock.start();
+					timeout.questions = setTimeout( function() {
+						document.querySelector("body").classList.remove("anim-questions");
+						document.querySelector("body").classList.remove("cursorhide");
+						document.querySelector("#toolbar").classList.remove("hidden");
+						clock = setCounter(clockConfig.allow);
+					}, (clockConfig.questions) * 1000);
+				}, (clockConfig.allow+1) * 1000);
+			});
+		});
+
+		function setCounter(seconds){
+			return $('.clock').FlipClock(seconds, {
+		        clockFace: 'HourlyCounter',
+		        countdown: true,
+		        autoStart: false
+		    });
+		}
+	</script>
+	
+	</body>
+</html>
