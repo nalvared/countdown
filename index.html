@@ -1,11 +1,19 @@
 <html>
 	<head>
-		<link rel="stylesheet" href="flipclock.css">
-		<link rel="stylesheet" href="custom.css">
+		<link rel="stylesheet" href="./css/flipclock.css">
+		<link rel="stylesheet" href="./css/custom.css">
 		<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
-		<script src="jquery.min.js"></script>
+		<!-- Insert this line above script imports  -->
+		<script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
 
-		<script src="flipclock.min.js"></script>
+		<!-- normal script imports etc  -->
+		<script src="js/jquery.min.js"></script>     
+
+		<!-- Insert this line after script imports -->
+		<script>if (window.module) module = window.module;</script>
+		<script>
+			require('./js/flipclock.min.js');
+		</script>
 	</head>
 	<body>
 		<div id="toolbar" class="toolbar">
@@ -26,7 +34,7 @@
 				</div>
 				<div class="set">
 					<span></span>
-					<button id="setAllowed">Update</button>
+					<button id="setAllowed">Set</button>
 				</div>
 				<div class="clear"></div>
 			</div>
@@ -46,7 +54,7 @@
 				</div>
 				<div class="set">
 					<span></span>
-					<button id="setQuestions">Update</button>
+					<button id="setQuestions">Set</button>
 				</div>
 				<div class="clear"></div>
 			</div>
